@@ -9,7 +9,7 @@
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
 </head>
-<body class="bg-slate-50 text-slate-800 font-sans antialiased">
+<body class="bg-slate-50 text-slate-800 font-sans antialiased relative">
 
     <!-- Navegación -->
     <nav class="bg-white shadow-sm sticky top-0 z-50">
@@ -227,11 +227,89 @@
         </div>
     </footer>
 
-    <!-- Inicializar Lucide Icons -->
+    <!-- WIDGET DEL CHATBOT CON IA (Esquina inferior derecha) -->
+    <div class="fixed bottom-6 right-6 z-50">
+        <!-- Botón flotante para abrir/cerrar -->
+        <button id="chat-toggle" onclick="toggleChat()" class="bg-indigo-600 text-white p-4 rounded-full shadow-2xl hover:bg-indigo-700 transition flex items-center gap-2 font-medium">
+            <i data-lucide="bot" class="w-6 h-6"></i>
+            <span class="hidden md:inline text-sm">Preguntale a la IA</span>
+        </button>
+
+        <!-- Ventana del Chat -->
+        <div id="chat-box" class="hidden absolute bottom-16 right-0 w-80 md:w-96 bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden flex flex-col h-[420px]">
+            <!-- Encabezado del Chat -->
+            <div class="bg-indigo-600 text-white p-4 flex justify-between items-center">
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-full bg-indigo-500 flex items-center justify-center">
+                        <i data-lucide="sparkles" class="w-4 h-4 text-white"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-sm">Asistente Virtual de Katherinne</h4>
+                        <p class="text-[10px] text-indigo-200">Entrenado con su perfil profesional</p>
+                    </div>
+                </div>
+                <button onclick="toggleChat()" class="text-indigo-200 hover:text-white font-bold">✕</button>
+            </div>
+
+            <!-- Cuerpo de mensajes -->
+            <div id="chat-messages" class="p-4 flex-1 overflow-y-auto space-y-3 bg-slate-50 text-xs">
+                <div class="bg-indigo-100 text-indigo-900 p-3 rounded-xl max-w-[85%]">
+                    👋 ¡Hola! Soy el asistente virtual de Katherinne. Podés preguntarme sobre su experiencia, estudios o herramientas. ¡Elegí una opción abajo!
+                </div>
+            </div>
+
+            <!-- Preguntas Rápidas sugeridas -->
+            <div class="p-2 border-t border-slate-200 bg-white flex flex-wrap gap-1">
+                <button onclick="askBot('estudios')" class="bg-slate-100 hover:bg-indigo-50 text-slate-700 hover:text-indigo-600 border border-slate-200 text-[11px] px-2 py-1 rounded-md transition">🎓 Estudios</button>
+                <button onclick="askBot('kyc')" class="bg-slate-100 hover:bg-indigo-50 text-slate-700 hover:text-indigo-600 border border-slate-200 text-[11px] px-2 py-1 rounded-md transition">🛡️ Experiencia KYC</button>
+                <button onclick="askBot('disponibilidad')" class="bg-slate-100 hover:bg-indigo-50 text-slate-700 hover:text-indigo-600 border border-slate-200 text-[11px] px-2 py-1 rounded-md transition">⏱️ Disponibilidad</button>
+                <button onclick="askBot('contacto')" class="bg-slate-100 hover:bg-indigo-50 text-slate-700 hover:text-indigo-600 border border-slate-200 text-[11px] px-2 py-1 rounded-md transition">📩 Contacto</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script de Funcionalidad del Chatbot -->
     <script>
         lucide.createIcons();
+
+        function toggleChat() {
+            const chatBox = document.getElementById('chat-box');
+            chatBox.classList.toggle('hidden');
+        }
+
+        const responses = {
+            estudios: "Katherinne estudia Abogacía en la Universidad de Buenos Aires (UBA) y se encuentra cursando el Ciclo Profesional Orientado.",
+            kyc: "Posee más de 4 años en el sector financiero. Trabajó como Analista KYC en Wenance realizando validación de identidad para Argentina y México con Incode y Nosis.",
+            disponibilidad: "Está disponible para incorporarse en modalidades Remota o Híbrida (CABA), tanto en esquemas Part-time como Full-time.",
+            contacto: "Podés contactarla directamente por WhatsApp al 11-7082-8479 o por mail a katherinnemedina20@gmail.com."
+        };
+
+        function askBot(topic) {
+            const messagesContainer = document.getElementById('chat-messages');
+            
+            // Mensaje del usuario
+            let userText = "";
+            if(topic === 'estudios') userText = "¿Dónde estudia y qué carrera cursa?";
+            if(topic === 'kyc') userText = "¿Qué experiencia tiene en KYC y Finanzas?";
+            if(topic === 'disponibilidad') userText = "¿Qué disponibilidad laboral busca?";
+            if(topic === 'contacto') userText = "¿Cómo puedo ponerme en contacto?";
+
+            const userMsg = document.createElement('div');
+            userMsg.className = 'bg-indigo-600 text-white p-3 rounded-xl max-w-[85%] ml-auto text-right shadow-sm';
+            userMsg.innerText = userText;
+            messagesContainer.appendChild(userMsg);
+
+            // Respuesta del Bot
+            setTimeout(() => {
+                const botMsg = document.createElement('div');
+                botMsg.className = 'bg-white text-slate-800 p-3 rounded-xl max-w-[85%] border border-slate-200 shadow-sm';
+                botMsg.innerText = responses[topic];
+                messagesContainer.appendChild(botMsg);
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            }, 300);
+
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
     </script>
-</body>
-</html>
 </body>
 </html>
